@@ -11,11 +11,7 @@ class RulesController < ApplicationController
     @rule = Rule.new(update_params)
     if @rule.save
       flash[:notice] = "Created new rule."
-      if params[:redirect_to] == "root_path"
-        redirect_to root_path
-      else
-        redirect_to rules_path
-      end
+      redirect_to select_redirect_path
     else
       flash[:errors] = @rule.errors.full_messages
       render "new"
@@ -31,7 +27,7 @@ class RulesController < ApplicationController
     @rule.assign_attributes(update_params)
     if @rule.save
       flash[:notice] = "Updated rule."
-      redirect_to rules_path
+      redirect_to select_redirect_path
     else
       flash[:errors] = @rule.errors.full_messages
       render "edit"
@@ -44,7 +40,7 @@ class RulesController < ApplicationController
     @rule.destroy!
     flash[:notice] = "Deleted rule."
 
-    redirect_to rules_path
+    redirect_to select_redirect_path
   end
 
   private
@@ -52,5 +48,15 @@ class RulesController < ApplicationController
   def update_params
     params.require(:rule).permit(:description_matches, :reference_matches,
         :particular_matches, :code_matches, :any_matches, :category_id)
+  end
+
+  def select_redirect_path
+    if params[:redirect_to] == "root_path"
+      root_path
+    elsif params[:redirect_to] == "uncategorised"
+      root_path(uncategorised: true)
+    else
+      rules_path
+    end
   end
 end

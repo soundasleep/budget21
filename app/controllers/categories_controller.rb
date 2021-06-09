@@ -41,6 +41,6 @@ class CategoriesController < ApplicationController
   private
 
   def update_params
-    params.require(:category).permit(:title, :color)
+    params.require(:category).permit(:title, :color, :order)
   end
 end

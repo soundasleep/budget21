@@ -10,7 +10,7 @@
     <th>Amount</th>
     <th>Category</th>
   </tr>
-  <% @transactions.first(30).each do |txn| %>
+  <% @transactions.each do |txn| %>
     <tr>
       <td class="date"><%= txn.date.to_date.strftime("%Y-%m-%d") %></td>
       <td><%= txn.op_name || txn.description %></td>
@@ -22,7 +22,7 @@
       </td>
       <td class="category color-<%= txn.calculated_category&.color || "none" %>">
         <% if txn.calculated_category %>
-          <%= link_to(txn.calculated_category.title, txn.calculated_category) %>
+          <%= link_to(txn.calculated_category.title, edit_category_path(txn.calculated_category)) %>
           (<%= link_to "rule", edit_rule_path(txn.calculated_rule) %>)
         <% else %>
           -
@@ -45,7 +45,7 @@
               <%= f.text_field template[:key] %>:<br>
               <span>Tag as</span>
               <%= f.select :category_id, category_options_for_select %>
-              <%= hidden_field_tag :redirect_to, "root_path" %>
+              <%= hidden_field_tag :redirect_to, params[:uncategorised] ? "uncategorised" : "root_path" %>
               <%= f.submit "Create" %>
             <% end %>
           <% end %>

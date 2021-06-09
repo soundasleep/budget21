@@ -32,6 +32,29 @@ table {
   td, th {
     padding: 4px;
     vertical-align: top;
+
+    &.date, &.amount, &.category {
+      min-width: 6em;
+    }
+    &.date, &.category {
+      text-align: center;
+    }
+    &.amount {
+      text-align: right;
+    }
+  }
+
+  tr.create-rule {
+    background: #eee;
+    color: #333;
+
+    th, td {
+      font-size: 80%;
+
+      input,select {
+        font-size: 90%;
+      }
+    }
   }
 }
 

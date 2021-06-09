@@ -7,6 +7,10 @@
       <td><%= f.text_field :title %></td>
     </tr>
     <tr>
+      <th>Order</th>
+      <td><%= f.number_field :order %> (higher = displayed first)</td>
+    </tr>
+    <tr>
       <th>Color</th>
       <td><%= f.select :color, color_options_for_select %></td>
     </tr>

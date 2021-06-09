@@ -2,11 +2,13 @@
 
 <table>
   <tr>
+    <th>Order</th>
     <th>Title</th>
     <th>Color</th>
   </tr>
   <% @categories.each do |category| %>
     <tr class="color-<%= category.color %>">
+      <td class="amount"><%= category.order %></td>
       <td><%= link_to category.title, edit_category_path(category) %></td>
       <td><%= category.color %></td>
     </tr>
