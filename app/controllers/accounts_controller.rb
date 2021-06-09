@@ -36,14 +36,17 @@ class AccountsController < ApplicationController
       CSV.foreach(@account.last_csv.current_path, "r") do |row|
         first_row ||= row
 
-        # 0              1    2                3                          4      5       6       7      8       9       10      11                     12              13             14     15
-        # Account number,Date,Memo/Description,Source Code (payment type),TP ref,TP part,TP code,OP ref,OP part,OP code,OP name,OP Bank Account Number,Amount (credit),Amount (debit),Amount,Balance
         if row[0] == "Account number" && row[1] == "Date" && row[2] == "Memo/Description" && row[3] == "Source Code (payment type)" &&
             row.length == 16
           file_type = :kiwibank
+        elsif row[0].match?(/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}/) && row[1].nil? && row[2].nil? && row[3].nil? && row.length == 4
+          file_type = :kiwibank_cc
+
         else
           case file_type
           when :kiwibank
+            # 0              1    2                3                          4      5       6       7      8       9       10      11                     12              13             14     15
+            # Account number,Date,Memo/Description,Source Code (payment type),TP ref,TP part,TP code,OP ref,OP part,OP code,OP name,OP Bank Account Number,Amount (credit),Amount (debit),Amount,Balance
             txn = @account.transactions.where({
               description: row[2],
               source_code: row[3],
@@ -64,6 +67,23 @@ class AccountsController < ApplicationController
               tp_code: row[6],
               op_part: row[8],
               op_code: row[9],
+            })
+            transactions_found += 1
+          when :kiwibank_cc
+            # 0    1           2      3
+            # Date,Description,Card #,Amount
+            txn = @account.transactions.where({
+              description: row[1],
+              tp_ref: row[2],
+              amount: row[3]
+            }).where("date >= ? AND date <= ?", row[0].to_date.beginning_of_day, row[0].to_date.end_of_day).first_or_create
+            if txn.new_record?
+              transactions_created += 1
+            else
+              transactions_updated += 1
+            end
+            txn.update_attributes!({
+              date: row[0],
             })
             transactions_found += 1
           else
