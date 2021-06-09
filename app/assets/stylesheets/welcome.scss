@@ -1,3 +1,30 @@
 // Place all the styles related to the welcome controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+table.transactions {
+  th, td {
+    &.date, &.amount, &.category {
+      min-width: 5em;
+    }
+    &.date {
+      text-align: center;
+    }
+    &.amount {
+      text-align: right;
+    }
+  }
+
+  tr.create-rule {
+    background: #eee;
+    color: #333;
+
+    th, td {
+      font-size: 80%;
+
+      input,select {
+        font-size: 90%;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <h1><%= @transactions.count %> transactions, <%= @categories.count %> categories</h1>
 
-<table>
+<table class="transactions">
   <tr>
     <th>Date</th>
     <th>Description</th>
@@ -12,13 +12,15 @@
   </tr>
   <% @transactions.first(30).each do |txn| %>
     <tr>
-      <td><%= txn.date.to_date.strftime("%Y-%m-%d") %></td>
+      <td class="date"><%= txn.date.to_date.strftime("%Y-%m-%d") %></td>
       <td><%= txn.op_name || txn.description %></td>
       <td><%= txn.combined_particulars %></td>
       <td><%= txn.combined_code %></td>
       <td><%= txn.combined_reference %></td>
-      <td><%= txn.amount %></td>
-      <td>
+      <td class="amount <%= txn.amount < 0 ? "debit" : "credit" %>">
+        <%= number_with_precision(txn.amount, delimiter: ",", precision: 2) %>
+      </td>
+      <td class="category">
         <% if txn.calculated_category %>
           <%= link_to(txn.calculated_category.title, txn.calculated_category) %>
           (<%= link_to "rule", edit_rule_path(txn.calculated_rule) %>)
@@ -28,8 +30,8 @@
       </td>
     </tr>
     <% unless txn.calculated_category %>
-    <tr>
-      <td>Create <%= link_to "new rule", new_rule_path %>:</td>
+    <tr class="create-rule">
+      <td class="date">Create <%= link_to "new rule", new_rule_path %>:</td>
       <% [
         { key: :description_matches, value: (txn.op_name || txn.description), title: "Description" },
         { key: :particular_matches, value: (txn.combined_particulars), title: "Particulars" },
@@ -37,16 +39,19 @@
         { key: :reference_matches, value: (txn.combined_reference), title: "Reference" },
       ].each do |template| %>
         <td>
-          <%= form_for Rule.new(template[:key] => template[:value].strip.downcase) do |f| %>
-            <span><%= template[:title] %> match</span>
-            <%= f.text_field template[:key] %>:<br>
-            <span>Tag as</span>
-            <%= f.select :category_id, category_options_for_select %>
-            <%= hidden_field_tag :redirect_to, "root_path" %>
-            <%= f.submit "Create" %>
+          <% unless template[:value].strip.downcase.blank? %>
+            <%= form_for Rule.new(template[:key] => template[:value].strip.downcase) do |f| %>
+              <span><%= template[:title] %> match</span>
+              <%= f.text_field template[:key] %>:<br>
+              <span>Tag as</span>
+              <%= f.select :category_id, category_options_for_select %>
+              <%= hidden_field_tag :redirect_to, "root_path" %>
+              <%= f.submit "Create" %>
+            <% end %>
           <% end %>
         </td>
       <% end %>
+      <td colspan="2"></td>
     </tr>
     <% end %>
   <% end %>
