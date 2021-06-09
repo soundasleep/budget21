@@ -4,11 +4,20 @@
 
 <%
 by_week = {}
+none = {}
+sum = {}
 
-@transactions.group_by { |txn| txn.date.beginning_of_week }.each do |date, txns|
-  all_values = (@categories + [nil]).map { |v| [ v, 0 ] }.to_h
+@transactions.group_by { |txn| txn.date.send(@method) }.each do |date, txns|
+  all_values = @categories.map { |v| [ v, 0 ] }.to_h
+  none[date] = 0;
+  sum[date] = 0;
   txns.each do |txn|
-    all_values[txn.cached_category] += txn.amount
+    if txn.cached_category.nil?
+      none[date] += txn.amount
+    else
+      all_values[txn.cached_category] += txn.amount
+    end
+    sum[date] += txn.amount
   end
   by_week[date] = all_values
 end
@@ -16,13 +25,14 @@ end
 
 <table class="transactions">
   <tr>
-    <th>Week starting</th>
+    <th><%= @title %> starting</th>
     <% @categories.each do |category| %>
       <th class="category color-<%= category.color %>">
         <%= link_to category.title, edit_category_path(category) %>
       </th>
     <% end %>
     <th>None</th>
+    <th>Sum</th>
   </tr>
   <% by_week.each do |date, all_values| %>
   <tr>
@@ -32,12 +42,24 @@ end
         <td class="amount">-</td>
       <% else %>
         <td class="amount">
-          <%= content_tag(:span, class: value < 0 ? "debit" : "credit") do %>
-            <%= number_with_precision(value, precision: 2, delimiter: ",") %>
+          <%= link_to root_path(category: category, from: date.send(@method), to: date.send(@method_end)) do %>
+            <%= content_tag(:span, class: value < 0 ? "debit" : "credit") do %>
+              <%= number_with_precision(value, precision: 2, delimiter: ",") %>
+            <% end %>
           <% end %>
         </td>
       <% end %>      
     <% end %>
+    <td class="amount">
+      <%= content_tag(:span, class: none[date] < 0 ? "debit" : "credit") do %>
+        <%= number_with_precision(none[date], precision: 2, delimiter: ",") %>
+      <% end %>
+    </td>
+    <td class="amount">
+      <%= content_tag(:span, class: sum[date] < 0 ? "debit" : "credit") do %>
+        <%= number_with_precision(sum[date], precision: 2, delimiter: ",") %>
+      <% end %>
+    </td>
   </tr>
   <% end %>
 </table>
@@ -49,13 +71,13 @@ end
 
   function drawChart() {
     var data = google.visualization.arrayToDataTable([
-      <%= (["Date"] + @categories.map(&:title) + ["None"]).to_json.html_safe %>,
+      <%= (["Date"] + @categories.map(&:title) + ["None", "Sum"]).to_json.html_safe %>,
       <% by_week.each do |date, all_values| %>
       [
         new Date("<%= date.strftime("%Y-%m-%d") %>"),
         <% all_values.each do |category, value| %>
           <%= value %>,
-        <% end %>
+        <% end %> <%= none[date] %>, <%= sum[date] %>
       ],
       <% end %>
     ]);
@@ -64,7 +86,7 @@ end
       title: 'Company Performance',
       curveType: 'function',
       legend: { position: 'bottom' },
-      colors: <%= (@categories.map(&:color) + ["#ccc"]).to_json.html_safe %>,
+      colors: <%= (@categories.map(&:color) + ["#ccc", "magenta"]).to_json.html_safe %>,
     };
 
     var chart = new google.visualization.LineChart(document.getElementById('chart'));

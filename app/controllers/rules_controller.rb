@@ -37,6 +37,13 @@ class RulesController < ApplicationController
   def destroy
     @rule = Rule.find(params[:id])
 
+    Transaction.all.where(cached_rule: @rule).each do |txn|
+      txn.update_attributes!({
+        cached_rule: nil,
+        cached_category: nil,
+      })
+    end
+
     @rule.destroy!
     flash[:notice] = "Deleted rule."
 

@@ -1,5 +1,7 @@
 <h1>Rules</h1>
 
+<%= link_to "Create new", new_rule_path %>
+
 <table>
   <tr>
     <th>Any</th>
@@ -20,9 +22,8 @@
       <td><%= rule.code_matches || "-" %></td>
       <td>&rArr;</td>
       <td><%= link_to rule.category.title, rule.category %></td>
-      <td><%= link_to "edit", edit_rule_path(rule) %> <%= link_to "delete", rule, method: :delete, data: { confirm: "Are you sure you want to delete this rule?" } %></td>
+      <td><%= link_to "edit", edit_rule_path(rule) %> <%= link_to "delete", rule, method: :delete, data: { confirm: "Are you sure you want to delete this rule? This will reset any transactions that used this rule and they will need to be re-categorised." } %></td>
     </tr>
   <% end %>
 </table>
 
-<%= link_to "Create new", new_rule_path %>

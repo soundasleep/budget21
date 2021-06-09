@@ -14,8 +14,11 @@
   <body>
     <nav>
       <%= link_to "Home", root_path %>
-      <%= link_to "By week", welcome_weeks_path %>
       <%= link_to "Uncategorised", root_path(uncategorised: true) %>
+      -
+      <%= link_to "By week", welcome_weeks_path %>
+      <%= link_to "By month", welcome_months_path %>
+      -
       <%= link_to "Accounts", accounts_path %>
       <%= link_to "Categories", categories_path %>
       <%= link_to "Rules", rules_path %>
