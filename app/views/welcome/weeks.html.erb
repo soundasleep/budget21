@@ -1,9 +1,11 @@
 <h1><%= @transactions.count %> transactions, <%= @categories.count %> categories</h1>
 
+<div id="chart" style="width: 100%; min-height: 500px"></div>
+
 <%
 by_week = {}
 
-@transactions.first(30).group_by { |txn| txn.date.beginning_of_week }.each do |date, txns|
+@transactions.group_by { |txn| txn.date.beginning_of_week }.each do |date, txns|
   all_values = (@categories + [nil]).map { |v| [ v, 0 ] }.to_h
   txns.each do |txn|
     all_values[txn.calculated_category] += txn.amount
@@ -27,7 +29,7 @@ end
     <th><%= date.strftime("%a %-d %b %Y") %></th>
     <% all_values.each do |category, value| %>
       <% if value.zero? %>
-        <td>-</td>
+        <td class="amount">-</td>
       <% else %>
         <td class="amount">
           <%= content_tag(:span, class: value < 0 ? "debit" : "credit") do %>
@@ -39,3 +41,34 @@ end
   </tr>
   <% end %>
 </table>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      <%= (["Date"] + @categories.map(&:title) + ["None"]).to_json.html_safe %>,
+      <% by_week.each do |date, all_values| %>
+      [
+        new Date("<%= date.strftime("%Y-%m-%d") %>"),
+        <% all_values.each do |category, value| %>
+          <%= value %>,
+        <% end %>
+      ],
+      <% end %>
+    ]);
+
+    var options = {
+      title: 'Company Performance',
+      curveType: 'function',
+      legend: { position: 'bottom' },
+      colors: <%= (@categories.map(&:color) + ["#ccc"]).to_json.html_safe %>,
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+    chart.draw(data, options);
+  }
+</script>
