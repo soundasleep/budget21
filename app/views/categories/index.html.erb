@@ -1,8 +1,14 @@
 <h1>Categories</h1>
 
-<ul>
-<% @categories.each do |category| %>
-  <li><%= link_to category.title, category %></li>
-<% end %>
-  <li><%= link_to "Create new", new_category_path %></li>
-</ul>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Color</th>
+  </tr>
+  <% @categories.each do |category| %>
+    <tr class="color-<%= category.color %>">
+      <td><%= link_to category.title, edit_category_path(category) %></td>
+      <td><%= category.color %></td>
+    </tr>
+  <% end %>
+</table>

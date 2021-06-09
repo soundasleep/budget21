@@ -3,4 +3,9 @@ class WelcomeController < ApplicationController
     @transactions = Transaction.all.order(date: :desc)
     @categories = Category.all
   end
+
+  def weeks
+    @transactions = Transaction.all.order(date: :desc)
+    @categories = Category.all
+  end
 end

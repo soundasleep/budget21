@@ -5,9 +5,9 @@
 table.transactions {
   th, td {
     &.date, &.amount, &.category {
-      min-width: 5em;
+      min-width: 6em;
     }
-    &.date {
+    &.date, &.category {
       text-align: center;
     }
     &.amount {

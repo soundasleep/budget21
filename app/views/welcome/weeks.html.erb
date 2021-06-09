@@ -1,0 +1,41 @@
+<h1><%= @transactions.count %> transactions, <%= @categories.count %> categories</h1>
+
+<%
+by_week = {}
+
+@transactions.first(30).group_by { |txn| txn.date.beginning_of_week }.each do |date, txns|
+  all_values = (@categories + [nil]).map { |v| [ v, 0 ] }.to_h
+  txns.each do |txn|
+    all_values[txn.calculated_category] += txn.amount
+  end
+  by_week[date] = all_values
+end
+%>
+
+<table class="transactions">
+  <tr>
+    <th>Week starting</th>
+    <% @categories.each do |category| %>
+      <th class="category color-<%= category.color %>">
+        <%= link_to category.title, edit_category_path(category) %>
+      </th>
+    <% end %>
+    <th>None</th>
+  </tr>
+  <% by_week.each do |date, all_values| %>
+  <tr>
+    <th><%= date.strftime("%a %-d %b %Y") %></th>
+    <% all_values.each do |category, value| %>
+      <% if value.zero? %>
+        <td>-</td>
+      <% else %>
+        <td class="amount">
+          <%= content_tag(:span, class: value < 0 ? "debit" : "credit") do %>
+            <%= number_with_precision(value, precision: 2, delimiter: ",") %>
+          <% end %>
+        </td>
+      <% end %>      
+    <% end %>
+  </tr>
+  <% end %>
+</table>

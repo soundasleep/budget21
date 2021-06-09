@@ -15,7 +15,7 @@ class CategoriesController < ApplicationController
     @category = Category.new(update_params)
     if @category.save
       flash[:notice] = "Created new category."
-      redirect_to @category
+      redirect_to categories_path
     else
       flash[:errors] = @category.errors.full_messages
       render "new"
@@ -31,7 +31,7 @@ class CategoriesController < ApplicationController
     @category.assign_attributes(update_params)
     if @category.save
       flash[:notice] = "Updated category."
-      redirect_to @category
+      redirect_to categories_path
     else
       flash[:errors] = @category.errors.full_messages
       render "edit"
@@ -41,6 +41,6 @@ class CategoriesController < ApplicationController
   private
 
   def update_params
-    params.require(:category).permit(:title)
+    params.require(:category).permit(:title, :color)
   end
 end

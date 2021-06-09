@@ -29,10 +29,32 @@ table {
   width: 100%;
   border-collapse: collapse;
 
-  tr, td {
+  td, th {
     padding: 4px;
     vertical-align: top;
   }
 }
 
 .debit { color: red; }
+
+.color-black, .color-red, .color-green, .color-blue {
+  color: white;
+
+  a {
+    color: yellow;
+  }
+}
+
+.color-yellow {
+  color: black;
+
+  a {
+    color: blue;
+  }
+}
+
+.color-black { background: black; }
+.color-red { background: red; }
+.color-yellow { background: yellow; }
+.color-green { background: green; }
+.color-blue { background: blue; }

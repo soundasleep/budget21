@@ -7,6 +7,10 @@
       <td><%= f.text_field :title %></td>
     </tr>
     <tr>
+      <th>Color</th>
+      <td><%= f.select :color, color_options_for_select %></td>
+    </tr>
+    <tr>
       <td colspan="2">
         <%= f.submit(category.new_record? ? "Create" : "Update") %>
         <% unless category.new_record? %>

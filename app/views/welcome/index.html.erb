@@ -20,7 +20,7 @@
       <td class="amount <%= txn.amount < 0 ? "debit" : "credit" %>">
         <%= number_with_precision(txn.amount, delimiter: ",", precision: 2) %>
       </td>
-      <td class="category">
+      <td class="category color-<%= txn.calculated_category&.color || "none" %>">
         <% if txn.calculated_category %>
           <%= link_to(txn.calculated_category.title, txn.calculated_category) %>
           (<%= link_to "rule", edit_rule_path(txn.calculated_rule) %>)

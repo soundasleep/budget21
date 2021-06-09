@@ -7,4 +7,16 @@ module CategoriesHelper
       ]
     end
   end
+
+  def color_options_for_select()
+    ["black", "red", "yellow", "green", "blue"].map do |color|
+      [
+        color,
+        color,
+        {
+          class: "color-#{color}"
+        }
+      ]
+    end
+  end
 end
