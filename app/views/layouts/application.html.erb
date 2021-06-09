@@ -9,6 +9,14 @@
   </head>
 
   <body>
+    <% [flash[:notice], flash[:notices]].compact.each do |content| %>
+      <%= render partial: "layouts/messages_collection", locals: { content: content, messages_type: "notice" } %>
+    <% end %>
+
+    <% [flash[:error], flash[:errors]].compact.each do |content| %>
+      <%= render partial: "layouts/messages_collection", locals: { content: content } %>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>

@@ -1,0 +1,30 @@
+<h1>Account <%= @account.name %> <small><%= link_to "edit", edit_account_path(@account) %></small></h1>
+
+<%= form_for @account, url: { action: "upload" }, html: { multipart: true } do |f| %>
+  <%= f.file_field :last_csv %>
+  <%= f.hidden_field :last_csv_cache %>
+  <%= f.submit "Upload CSV file" %>
+<% end %>
+
+<h2>Transactions</h2>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>To</th>
+    <th>Particulars</th>
+    <th>Code</th>
+    <th>Reference</th>
+    <th>Amount</th>
+  </tr>
+  <% @account.transactions.order(date: :desc).each do |txn| %>
+    <tr>
+      <td><%= txn.date.to_date.strftime("%Y-%m-%d") %></td>
+      <td><%= txn.op_name || txn.description %></td>
+      <td><%= txn.combined_particulars %></td>
+      <td><%= txn.combined_code %></td>
+      <td><%= txn.combined_reference %></td>
+      <td><%= txn.amount %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,11 @@
+<div class="<%= defined?(messages_type) ? messages_type : "error" %> closable">
+  <% if content.respond_to?(:each) %>
+    <ul>
+      <% content.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <%= content %>
+  <% end %>
+</div>

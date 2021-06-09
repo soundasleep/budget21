@@ -1,0 +1,8 @@
+<h1>Accounts</h1>
+
+<ul>
+<% @accounts.each do |account| %>
+  <li><%= link_to account.name, account %></li>
+<% end %>
+  <li><%= link_to "Create new", new_account_path %></li>
+</ul>

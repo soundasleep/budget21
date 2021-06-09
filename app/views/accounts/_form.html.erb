@@ -1,0 +1,13 @@
+<h1><%= account.new_record? ? "New account" : "Edit account" %></h1>
+
+<%= form_for account do |f| %>
+  <table>
+    <tr>
+      <th>Name</th>
+      <td><%= f.text_field :name %></td>
+    </tr>
+    <tr>
+      <td colspan="2"><%= f.submit(account.new_record? ? "Create" : "Update") %></td>
+    </tr>
+  </table>
+<% end %>
