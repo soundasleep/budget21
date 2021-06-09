@@ -1,0 +1,28 @@
+<h1>Rules</h1>
+
+<table>
+  <tr>
+    <th>Any</th>
+    <th>Description</th>
+    <th>Reference</th>
+    <th>Pariculars</th>
+    <th>Code</th>
+    <th></th>
+    <th>Category</th>
+    <th></th>
+  </tr>
+  <% @rules.each do |rule| %>
+    <tr>
+      <td><%= rule.any_matches || "-" %></td>
+      <td><%= rule.description_matches || "-" %></td>
+      <td><%= rule.reference_matches || "-" %></td>
+      <td><%= rule.particular_matches || "-" %></td>
+      <td><%= rule.code_matches || "-" %></td>
+      <td>&rArr;</td>
+      <td><%= link_to rule.category.title, rule.category %></td>
+      <td><%= link_to "edit", edit_rule_path(rule) %> <%= link_to "delete", rule, method: :delete, data: { confirm: "Are you sure you want to delete this rule?" } %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "Create new", new_rule_path %>

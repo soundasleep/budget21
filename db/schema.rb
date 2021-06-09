@@ -10,13 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210609040957) do
+ActiveRecord::Schema.define(version: 20210609052509) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "last_csv"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rules", force: :cascade do |t|
+    t.integer "category_id", null: false
+    t.string "description_matches"
+    t.string "reference_matches"
+    t.string "particular_matches"
+    t.string "code_matches"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "any_matches"
+    t.index ["category_id"], name: "index_rules_on_category_id"
   end
 
   create_table "transactions", force: :cascade do |t|

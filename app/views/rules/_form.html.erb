@@ -1,0 +1,38 @@
+<h1><%= rule.new_record? ? "New rule" : "Edit rule" %></h1>
+
+<%= form_for rule do |f| %>
+  <table>
+    <tr>
+      <th>Any matches</th>
+      <td><%= f.text_field :any_matches %></td>
+    </tr>
+    <tr>
+      <th>Description matches</th>
+      <td><%= f.text_field :description_matches %></td>
+    </tr>
+    <tr>
+      <th>Reference matches</th>
+      <td><%= f.text_field :reference_matches %></td>
+    </tr>
+    <tr>
+      <th>Particulars matches</th>
+      <td><%= f.text_field :particular_matches %></td>
+    </tr>
+    <tr>
+      <th>Code matches</th>
+      <td><%= f.text_field :code_matches %></td>
+    </tr>
+    <tr>
+      <th>Category</th>
+      <td><%= f.select :category_id, category_options_for_select %></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <%= f.submit(rule.new_record? ? "Create" : "Update") %>
+        <% unless rule.new_record? %>
+          <%= link_to "delete", rule, method: :delete, data: { confirm: "Are you sure you want to delete this rule?" } %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+<% end %>

@@ -11,6 +11,9 @@
   <body>
     <nav>
       <%= link_to "Home", root_path %>
+      <%= link_to "Accounts", accounts_path %>
+      <%= link_to "Categories", categories_path %>
+      <%= link_to "Rules", rules_path %>
     </nav>
 
     <% [flash[:notice], flash[:notices]].compact.each do |content| %>

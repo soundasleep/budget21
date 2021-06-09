@@ -1,0 +1,53 @@
+<h1><%= @transactions.count %> transactions, <%= @categories.count %> categories</h1>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Particulars</th>
+    <th>Code</th>
+    <th>Reference</th>
+    <th>Amount</th>
+    <th>Category</th>
+  </tr>
+  <% @transactions.first(30).each do |txn| %>
+    <tr>
+      <td><%= txn.date.to_date.strftime("%Y-%m-%d") %></td>
+      <td><%= txn.op_name || txn.description %></td>
+      <td><%= txn.combined_particulars %></td>
+      <td><%= txn.combined_code %></td>
+      <td><%= txn.combined_reference %></td>
+      <td><%= txn.amount %></td>
+      <td>
+        <% if txn.calculated_category %>
+          <%= link_to(txn.calculated_category.title, txn.calculated_category) %>
+          (<%= link_to "rule", edit_rule_path(txn.calculated_rule) %>)
+        <% else %>
+          -
+        <% end %>
+      </td>
+    </tr>
+    <% unless txn.calculated_category %>
+    <tr>
+      <td>Create <%= link_to "new rule", new_rule_path %>:</td>
+      <% [
+        { key: :description_matches, value: (txn.op_name || txn.description), title: "Description" },
+        { key: :particular_matches, value: (txn.combined_particulars), title: "Particulars" },
+        { key: :code_matches, value: (txn.combined_code), title: "Code" },
+        { key: :reference_matches, value: (txn.combined_reference), title: "Reference" },
+      ].each do |template| %>
+        <td>
+          <%= form_for Rule.new(template[:key] => template[:value].strip.downcase) do |f| %>
+            <span><%= template[:title] %> match</span>
+            <%= f.text_field template[:key] %>:<br>
+            <span>Tag as</span>
+            <%= f.select :category_id, category_options_for_select %>
+            <%= hidden_field_tag :redirect_to, "root_path" %>
+            <%= f.submit "Create" %>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+    <% end %>
+  <% end %>
+</table>
