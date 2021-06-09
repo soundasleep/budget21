@@ -3,6 +3,10 @@ class AccountsController < ApplicationController
     @accounts = Account.all
   end
 
+  def show
+    @account = Account.find(params[:id])
+  end
+
   def new
     @account = Account.new
   end
@@ -19,8 +23,20 @@ class AccountsController < ApplicationController
     end
   end
 
-  def show
+  def edit
     @account = Account.find(params[:id])
+  end
+
+  def update
+    @account = Account.find(params[:id])
+    @account.assign_attributes(update_params)
+    if @account.save
+      flash[:notice] = "Updated account."
+      redirect_to @account
+    else
+      flash[:errors] = @account.errors.full_messages
+      render "edit"
+    end
   end
 
   def upload

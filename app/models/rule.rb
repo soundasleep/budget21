@@ -1,6 +1,8 @@
 class Rule < ApplicationRecord
   belongs_to :category
 
+  has_many :cached_transactions, class_name: "Transaction", foreign_key: :cached_rule_id, dependent: :nullify
+
   validates :category, presence: true
 
   validate :needs_at_least_one_matcher

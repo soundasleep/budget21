@@ -68,7 +68,7 @@ table {
   }
 }
 
-.color-yellow {
+.color-yellow, .color-gray {
   color: black;
 
   a {
@@ -81,3 +81,4 @@ table {
 .color-yellow { background: yellow; }
 .color-green { background: green; }
 .color-blue { background: blue; }
+.color-gray { background: #ccc; }

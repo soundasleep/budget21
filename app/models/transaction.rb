@@ -1,6 +1,9 @@
 class Transaction < ApplicationRecord
   belongs_to :account
 
+  belongs_to :cached_category, optional: true, class_name: "Category"
+  belongs_to :cached_rule, optional: true, class_name: "Rule"
+
   validates :account, :date, :amount, presence: true
   validates :amount, numericality: true
 

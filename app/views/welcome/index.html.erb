@@ -20,16 +20,16 @@
       <td class="amount <%= txn.amount < 0 ? "debit" : "credit" %>">
         <%= number_with_precision(txn.amount, delimiter: ",", precision: 2) %>
       </td>
-      <td class="category color-<%= txn.calculated_category&.color || "none" %>">
-        <% if txn.calculated_category %>
-          <%= link_to(txn.calculated_category.title, edit_category_path(txn.calculated_category)) %>
-          (<%= link_to "rule", edit_rule_path(txn.calculated_rule) %>)
+      <td class="category color-<%= txn.cached_category&.color || "none" %>">
+        <% if txn.cached_category %>
+          <%= link_to(txn.cached_category.title, edit_category_path(txn.cached_category)) %>
+          (<%= link_to "rule", edit_rule_path(txn.cached_rule) %>)
         <% else %>
           -
         <% end %>
       </td>
     </tr>
-    <% unless txn.calculated_category %>
+    <% unless txn.cached_category %>
     <tr class="create-rule">
       <td class="date">Create <%= link_to "new rule", new_rule_path %>:</td>
       <% [
@@ -40,7 +40,7 @@
       ].each do |template| %>
         <td>
           <% unless template[:value].strip.downcase.blank? %>
-            <%= form_for Rule.new(template[:key] => template[:value].strip.downcase) do |f| %>
+            <%= form_for Rule.new(template[:key] => regexpise(template[:value])) do |f| %>
               <span><%= template[:title] %> match</span>
               <%= f.text_field template[:key] %>:<br>
               <span>Tag as</span>

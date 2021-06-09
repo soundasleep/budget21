@@ -8,7 +8,7 @@ by_week = {}
 @transactions.group_by { |txn| txn.date.beginning_of_week }.each do |date, txns|
   all_values = (@categories + [nil]).map { |v| [ v, 0 ] }.to_h
   txns.each do |txn|
-    all_values[txn.calculated_category] += txn.amount
+    all_values[txn.cached_category] += txn.amount
   end
   by_week[date] = all_values
 end
