@@ -5,10 +5,10 @@ class WelcomeController < ApplicationController
       @transactions = @transactions.where(cached_category: Category.find(params[:category]))
     end
     if params[:from]
-      @transactions = @transactions.where('date >= ?', params[:from])
+      @transactions = @transactions.where('date >= ?', params[:from].to_date)
     end
     if params[:to]
-      @transactions = @transactions.where('date <= ?', params[:to])
+      @transactions = @transactions.where('date < ?', params[:to].to_date)
     end
     if params[:uncategorised]
       @transactions = @transactions.where(cached_category: nil).limit(10)
