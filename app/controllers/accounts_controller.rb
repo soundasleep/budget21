@@ -41,7 +41,7 @@ class AccountsController < ApplicationController
 
   def upload
     @account = Account.find(params[:id])
-    @account.update_attributes(upload_params)
+    @account.update(upload_params)
     if @account.save
       file_type = nil
       first_row = nil
@@ -77,7 +77,7 @@ class AccountsController < ApplicationController
             else
               transactions_updated += 1
             end
-            txn.update_attributes!({
+            txn.update!({
               date: row[1],
               tp_part: row[5],
               tp_code: row[6],
@@ -98,7 +98,7 @@ class AccountsController < ApplicationController
             else
               transactions_updated += 1
             end
-            txn.update_attributes!({
+            txn.update!({
               date: row[0],
             })
             transactions_found += 1

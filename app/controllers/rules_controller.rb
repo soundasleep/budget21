@@ -38,7 +38,7 @@ class RulesController < ApplicationController
     @rule = Rule.find(params[:id])
 
     Transaction.all.where(cached_rule: @rule).each do |txn|
-      txn.update_attributes!({
+      txn.update!({
         cached_rule: nil,
         cached_category: nil,
       })

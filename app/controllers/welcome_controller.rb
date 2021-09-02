@@ -14,7 +14,7 @@ class WelcomeController < ApplicationController
       @transactions = @transactions.where(cached_category: nil).limit(10)
       @transactions.each do |txn|
         if txn.calculated_category
-          txn.update_attributes!({
+          txn.update!({
             cached_category: txn.calculated_category,
             cached_rule: txn.calculated_rule,
           })
